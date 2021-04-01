@@ -49,55 +49,47 @@
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;(unpin! t)
 
+
+(package! xelb)
 (package! exwm)
 (package! buffer-move)
 (package! exwm-edit)
 (package! exwm-mff :recipe (:host github :repo "ieure/exwm-mff" :branch "master"))
+(package! exwm-firefox-core :recipe (:host github :repo "walseb/exwm-firefox-core" :branch "master"))
 
-;(unpin! org-roam)
-;(package! org-roam :recipe (:host github :repo "zackteo/org-roam" :branch "master"))
+(package! emms)
+
+(package! screenshot :recipe (:host github :repo "tecosaur/screenshot" :branch "master" ))
+;; (package! screenshot :pin "c3103f66cc9f7be9d55962ba129248f02586c3d6")
+
+(package! page-break-lines)
+(package! clojure-essential-ref-nov)
+
+(package! epresent)
+;; (unpin! org-roam)
+;; (package! org-roam :recipe (:host github :repo "zackteo/org-roam" :branch "master"))
+
+(package! kibit-helper)                 ; Clojure suggestions with logic
 
 (package! org-roam-server)
 (package! org-ref)
 (package! ivy-bibtex)
 (package! org-roam-bibtex)
 
+(package! mathpix.el
+  :recipe (:host github :repo "jethrokuan/mathpix.el"))
+
 (package! nov)
+(package! ftable :recipe (:host github :repo "casouri/ftable" :branch "master"))
+(package! valign :recipe (:host github :repo "casouri/valign" :branch "master"))
 (package! dired-narrow)
 
 (package! lsp-treemacs)
 
-; https://github.com/jethrokuan/dots/tree/master/.doom.d
-;(package! deadgrep)
-;(package! easy-kill)
-;(package! org-clock-convenience)
-;(package! company-posframe)
-;(package! org-roam
-;  :recipe (:host github :repo "org-roam/org-roam"))
-;(package! org-roam-bibtex
-;  :recipe (:host github :repo "org-roam/org-roam-bibtex"))
-;(package! org-journal)
-;(package! org-ref-ox-hugo
-;  :recipe (:host github :repo "jethrokuan/org-ref-ox-hugo" :branch "custom/overrides"))
-;(package! mathpix.el
-;  :recipe (:host github :repo "jethrokuan/mathpix.el"))
-;(package! anki-editor)
-;(package! gif-screencast
-;  :recipe (:host gitlab :repo "ambrevar/emacs-gif-screencast"))
-;(package! modus-operandi-theme)
-;(package! outshine)
-;(package! company-org-roam
-;  :recipe (:host github :repo "jethrokuan/company-org-roam"))
-;(package! spell-fu
-;  :recipe (:host gitlab :repo "ideasman42/emacs-spell-fu"))
-;(package! ox-texinfo+
-;  :recipe (:host github :repo "tarsius/ox-texinfo-plus"))
-;(package! nov
-;  :recipe (:type git :repo "https://depp.brause.cc/nov.el.git"))
-;(package! git-link)
-;(package! yaml-mode)
-;(package! org-roam-server
-;  :recipe (:host github :repo "org-roam/org-roam-server"))
-;(package! forge)
-;(package! emmet-mode)
-;(package! buttercup)
+(package! aggressive-indent)
+
+(package! 4clojure)
+
+(package! telega)
+
+(package! multi-vterm)

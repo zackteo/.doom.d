@@ -38,10 +38,11 @@
          :map org-mode-map
          (("C-c m i" . org-roam-insert)))
   :config
-  ;(setq org-roam-title-to-slug-function  #'my-cool-title-function)
-  ;(setq org-roam-title-to-slug-function  #'org-roam--title-to-slug)
+  ;; (setq org-roam-title-to-slug-function  #'my-cool-title-function)
+  ;; (setq org-roam-title-to-slug-function  #'org-roam--title-to-slug)
+  (setq org-roam-buffer-width 0.15)
   (setq org-roam-tag-sources '(prop last-directory))
-  (setq org-roam-title-include-subdirs t)
+  ;; (setq org-roam-title-include-subdirs t)
   (setq org-roam-capture-templates
         '(("d" "default" plain (function org-roam--capture-get-point)
            "%?"

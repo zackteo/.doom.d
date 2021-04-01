@@ -29,7 +29,7 @@
 ;;; Zackteo Changes: ‘flet’ is an obsolete macro (as of 24.3); use either ‘cl-flet’ or ‘cl-letf’.
 
 (require 'dash)
-(require 'dash-functional)
+;; (require 'dash-functional)
 
 (defgroup justify-kp ()
   "Justify paragraphs using Knuth/Plass algorithm."

@@ -17,24 +17,35 @@
 ;; You can also try 'gd' (or 'C-c g d') to jump to their definition and see how
 ;; they are implemented.
 
+;; toggle flycheck on and off
+
 (map! "C-z" nil)
+(setq iedit-toggle-key-default nil)
+(setq-default indent-tabs-mode nil)
+
 ;;(setq doom-localleader-alt-key "C-z")
 (global-set-key (kbd "<f5>") 'revert-buffer)
 
+;; Not sure if i want this
+(global-set-key (kbd "M-/") 'hippie-expand)
+
+(setq hippie-expand-try-functions-list '(try-expand-dabbrev try-expand-dabbrev-all-buffers try-expand-dabbrev-from-kill try-complete-file-name-partially try-complete-file-name try-expand-all-abbrevs try-expand-list try-expand-line try-complete-lisp-symbol-partially try-complete-lisp-symbol))
+
 ;; Backups
 ;; Settled by doom in .local/cache/backup
-;(defvar --backup-directory (concat user-emacs-directory "backups"))
-;(if (not (file-exists-p --backup-directory))
-;        (make-directory --backup-directory t))
-;(setq backup-directory-alist `(("." . ,--backup-directory)))
-(setq make-backup-files t               ; backup of a file the first time it is saved.
-      backup-by-copying t               ; don't clobber symlinks
-      version-control t                 ; version numbers for backup files
-      vc-make-backup-files t            ; backup versioned files (git?)
-      delete-old-versions t             ; delete excess backup files silently
+;;
+;; (defvar --backup-directory (concat user-emacs-directory "backups"))
+;; (if (not (file-exists-p --backup-directory))
+;;        (make-directory --backup-directory t))
+;; (setq backup-directory-alist `(("." . ,--backup-directory)))
+(setq make-backup-files t         ; backup of a file the first time it is saved.
+      backup-by-copying t         ; don't clobber symlinks
+      version-control t           ; version numbers for backup files
+      vc-make-backup-files t      ; backup versioned files (git?)
+      delete-old-versions t       ; delete excess backup files silently
       delete-by-moving-to-trash t
-      kept-old-versions 6               ; oldest versions to keep when a new numbered backup is made (default: 2)
-      kept-new-versions 9               ; newest versions to keep when a new numbered backup is made (default: 2)
+      kept-old-versions 6 ; oldest versions to keep when a new numbered backup is made (default: 2)
+      kept-new-versions 9 ; newest versions to keep when a new numbered backup is made (default: 2)
       )
 
 ;; No persistent undo history
@@ -99,31 +110,119 @@
 (after! org-noter
   org-noter-doc-split-fraction '(0.57 0.43))
 
+(use-package! aggressive-indent
+  :hook
+  (clojure-mode . aggressive-indent-mode))
+
+(use-package! kibit-helper
+  :bind ("C-x C-'" . kibit-accept-proposed-change))
+
+(use-package! clojure-essential-ref-nov
+  :after cider
+  :init
+  (setq clojure-essential-ref-nov-epub-path "~/Dropbox/Books/Clojure_The_Essential_Reference_v29_MEAP.epub")
+  :bind (
+         :map cider-mode-map
+         ("C-c C-d C-r" . clojure-essential-ref)
+         ("C-c C-d r" . clojure-essential-ref-nov)
+         :map cider-repl-mode-map
+         ("C-c C-d C-r" . clojure-essential-ref)))
+
 (use-package! cider
   :bind ("C-c C-e" . cider-pprint-eval-defun-to-comment)
   :config
-  ;(setq nrepl-log-messages t)
+  ;; (setq nrepl-log-messages t)
+  (setq nrepl-use-ssh-fallback-for-remote-hosts t)
   (add-hook 'cider-repl-mode-hook #'eldoc-mode)
-  (add-hook 'cider-repl-mode-hook #'rainbow-delimiters-mode))
+  (add-hook 'cider-repl-mode-hook #'rainbow-delimiters-mode)
+  ;; (add-hook 'cider-repl-mode-hook #'cider-company-enable-fuzzy-completion)
+  ;; (add-hook 'cider-mode-hook #'cider-company-enable-fuzzy-completion)
+  )
 
-;; TODO Learn
-(use-package! smartparens
-  :init
-  (map! :map smartparens-mode-map
-        "C-M-f" #'sp-forward-sexp
-        "C-M-b" #'sp-backward-sexp
-        ;; above makes sense
-        "C-M-u" #'sp-backward-up-sexp
-        "C-M-d" #'sp-down-sexp
-        "C-M-p" #'sp-backward-down-sexp
-        "C-M-n" #'sp-up-sexp
-        ;; learn above
-        "C-M-s" #'sp-splice-sexp
-        "C-)" #'sp-forward-slurp-sexp
-        "C-}" #'sp-forward-barf-sexp
-        "C-(" #'sp-backward-slurp-sexp
-        "C-{" #'sp-backward-barf-sexp
-        ))
+(after! clojure-mode
+;;; (define-clojure-indent
+  ;;   (PUT 2)
+  ;;   (POST 2)
+  ;;   (GET 2)
+  ;;   (PATCH 2)
+  ;;   (DELETE 2)
+  ;;   (context 2)
+  ;;   (for-all 2)
+  ;;   (checking 3)
+  ;;   (>defn :defn)
+  ;;   (>defn- :defn)
+  ;;   (match 1)
+  ;;   (cond 0)
+  ;;   (case 1)
+  ;;   (describe 1)
+  ;;   (it 2)
+  ;;   (fn-traced :defn)
+  ;;   (defn-traced :defn)
+  ;;   (assert-match 1))
+  (setq clojure-indent-style 'align-arguments)
+  (add-to-list 'clojure-align-binding-forms "let-flow")
+  ;; (setq clojure-indent-style 'always-align)
+  ;; (setq clojure-indent-style 'always-indent)
+  ;; (setq cider-default-cljs-repl 'shadow)
+  (put '>defn 'clojure-doc-string-elt 2)
+  (put '>defn- 'clojure-doc-string-elt 2)
+  (put 'defsys 'clojure-doc-string-elt 2)
+  (put 'defn-traced 'clojure-doc-string-elt 2)
+
+  ;; (setq clojure-align-forms-automatically t)
+  ;; See if i use below
+  (setq cljr-magic-require-namespaces
+        '(("io" . "clojure.java.io")
+          ("sh" . "clojure.java.shell")
+          ("jdbc" . "clojure.java.jdbc")
+          ("set" . "clojure.set")
+          ("time" . "java-time")
+          ("str" . "cuerdas.core")
+          ("path" . "pathetic.core")
+          ("walk" . "clojure.walk")
+          ("zip" . "clojure.zip")
+          ("async" . "clojure.core.async")
+          ("component" . "com.stuartsierra.component")
+          ("http" . "clj-http.client")
+          ("url" . "cemerick.url")
+          ("sql" . "honeysql.core")
+          ("csv" . "clojure.data.csv")
+          ("json" . "cheshire.core")
+          ("s" . "clojure.spec.alpha")
+          ("fs" . "me.raynes.fs")
+          ("ig" . "integrant.core")
+          ("cp" . "com.climate.claypoole")
+          ("re-frame" . "re-frame.core")
+          ("rf" . "re-frame.core")
+          ("rf.db" . "re-frame.db")
+          ("re" . "reagent.core")
+          ("reagent" . "reagent.core")
+          ("w" . "wing.core")
+          ("gen" . "clojure.spec.gen.alpha"))))
+
+(use-package! emms
+  :config
+  (require 'emms-setup)
+  (emms-all)
+  ;; (emms-standard)
+  (emms-default-players)
+  ;; (emms-mode-line 1)
+  ;; (emms-playing-time-disable-display)
+  (setq emms-source-file-default-directory "~/Music/")
+
+  (require 'emms-info-libtag)
+  (require 'emms-volume)
+  (setq emms-info-functions '(emms-info-libtag))
+  (setq emms-browser-covers 'emms-browser-cache-thumbnail-async)
+
+  (defun my-emms-play-url-at-point ()
+    "Same as `emms-play-url' but with url at point."
+    (interactive)
+    (emms-play-url (url-get-url-at-point))))
+
+
+(use-package! magit
+  :bind ("C-c g" . magit-file-dispatch))
 
 (use-package! dired-narrow
   :commands (dired-narrow-fuzzy)
@@ -131,13 +230,116 @@
   (map! :map dired-mode-map
         :desc "narrow" "/" #'dired-narrow-fuzzy))
 
+(use-package! org
+  :config
+  (setq org-refile-targets (quote (("newgtd.org" :maxlevel . 1)
+                                   ("someday.org" :level . 2))))
+  ;; (setq org-image-actual-width (/ (display-pixel-width) 3))
+  (setq org-image-actual-width nil)
+  (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
+  (setq org-plantuml-jar-path "/home/zackteo/Documents/plantuml.jar"))
+
+;; (add-to-list 'org-latex-classes
+;;              '("article"
+;;                "\\documentclass[10pt,article,oneside]{memoir}"
+;;                ("\\chapter{%s}" . "\\chapter*{%s}")
+;;                ("\\section{%s}" . "\\section*{%s}")
+;;                ("\\subsection{%s}" . "\\subsection*{%s}")
+;;                ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+;;                ("\\paragraph{%s}" . "\\paragraph*{%s}")
+;;                ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))
+;;              '("book"
+;;                "\\documentclass[10pt]{memoir}"
+;;                ("\\chapter{%s}" . "\\chapter*{%s}")
+;;                ("\\section{%s}" . "\\section*{%s}")
+;;                ("\\subsection{%s}" . "\\subsection*{%s}")
+;;                ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+;;                ("\\paragraph{%s}" . "\\paragraph*{%s}")
+;;                ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))
+;;              )
+
+;; If image folder not created, stringp error
+(use-package! org-download
+  :commands
+  org-download-dnd
+  org-download-yank
+  org-download-screenshot
+  org-download-dnd-base64
+  :init
+  (map! :map org-mode-map
+        "s-Y" #'org-download-screenshot
+        "s-y" #'org-download-yank)
+  (pushnew! dnd-protocol-alist
+            '("^\\(?:https?\\|ftp\\|file\\|nfs\\):" . +org-qdragndrop-download-dnd-fn)
+            '("^data:" . org-download-dnd-base64))
+  (advice-add #'org-download-enable :override #'ignore)
+  :config
+  (defun +org/org-download-method (link)
+    (let* ((filename
+            (file-name-nondirectory
+             (car (url-path-and-query
+                   (url-generic-parse-url link)))))
+           ;; Create folder name with current buffer name, and place in root dir
+           (dirname (concat "./images/"
+                            (replace-regexp-in-string " " "_"
+                                                      (downcase (file-name-base buffer-file-name)))))
+           (filename-with-timestamp (format "%s%s.%s"
+                                            (file-name-sans-extension filename)
+                                            (format-time-string org-download-timestamp)
+                                            (file-name-extension filename))))
+      (make-directory dirname t)
+      (expand-file-name filename-with-timestamp dirname)))
+  :config
+  (setq org-download-screenshot-method
+        (cond ((executable-find "maim")  "maim -u -s %s")
+              ((executable-find "scrot") "scrot -s %s")))
+  (setq org-download-method '+org/org-download-method))
+
+
+(defun screenshot-svg ()
+  "Save a screenshot of the current frame as an SVG image.
+Saves to a temp file and puts the filename in the kill ring."
+  (interactive)
+  (let* ((filename (make-temp-file "Emacs" nil ".svg"))
+         (data (x-export-frames nil 'svg)))
+    (with-temp-file filename
+      (insert data))
+    (kill-new filename)
+    (message filename)))
+
+
+(use-package! mathpix.el
+  :commands (mathpix-screenshot)
+  :init
+  (map! "C-x m" #'mathpix-screenshot)
+  (setq mathpix-screenshot-method (cond ((executable-find "maim")  "maim -u -s %s")
+                                        ((executable-find "scrot") "scrot -s %s"))
+        mathpix-app-id ""
+        mathpix-app-key ""))
+
+
+
 ;; active Babel languages
 (org-babel-do-load-languages
  'org-babel-load-languages
  '((clojure . t)
    (emacs-lisp . t)))
 
-(require 'lsp-java-boot)
+(require 'org)
+(require 'ob-clojure)
+
+(setq org-babel-clojure-backend 'cider)
+(require 'cider)
+
+
+;; (require 'lsp-java-boot)
 ;; to enable the lenses
-(add-hook 'lsp-mode-hook #'lsp-lens-mode)
-(add-hook 'java-mode-hook #'lsp-java-boot-lens-mode)
+;; (add-hook 'lsp-mode-hook #'lsp-lens-mode)
+;; (add-hook 'java-mode-hook #'lsp-java-boot-lens-mode)
+
+;; telega
+(set-fontset-font t 'unicode "Symbola" nil 'append)
+(use-package! telega
+  :init
+  ;; (setq telega-chat-show-deleted-messages-for nil)
+  )

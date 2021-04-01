@@ -58,9 +58,11 @@
 ;; PERSONAL CONFIG
 
 ;; Load personalised keybindings
+;; (load! "+exwm_test")
 (load! "+exwm")
 (load! "+bindings")
 (load! "+org_roam")
+(load! "notespace")
 
 ;; package for nov
 (load! "justify-kp")
@@ -74,7 +76,7 @@
  '(ispell-dictionary "en_GB")
  '(ispell-program-name "hunspell")
  '(org-agenda-files
-   '("/home/zackteo/Dropbox/org/CS_Diary.org" "/home/zackteo/Dropbox/org/SUTD_Capstone.org" "/home/zackteo/Dropbox/org/Term5.org" "/home/zackteo/Dropbox/org/Test.org" "/home/zackteo/Dropbox/org/The Imitation of Christ [with Biographical Introduction] by Kempis Thomas (z-lib.org).org" "/home/zackteo/Dropbox/org/The Pragmatic Programmer Your Journey to Mastery, 20th Anniversary Edition by Andrew Hunt David Hurst Thomas (z-lib.org).org" "/home/zackteo/Dropbox/org/birthday.org" "/home/zackteo/Dropbox/org/birthday_new.org" "/home/zackteo/Dropbox/org/newgtd.org" "/home/zackteo/Dropbox/org/someday.org" "/home/zackteo/Dropbox/org/weeklyreview.org"))
+   '("/home/zackteo/Dropbox/org/birthday.org" "/home/zackteo/Dropbox/org/birthday_new.org" "/home/zackteo/Dropbox/org/newgtd.org" "/home/zackteo/Dropbox/org/weeklyreview.org"))
  '(org-roam-directory "~/Dropbox/org/roam/")
  '(org-roam-index-file "index.org")
  '(package-selected-packages '(org-roam-server)))

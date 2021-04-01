@@ -4,10 +4,11 @@
 
 (use-package! exwm
   :config
-  (setq exwm-workspace-number 7)
-  (setq exwm-workspace-switch-create-limit 7)
+  (setq exwm-workspace-number 10)
+  (setq exwm-workspace-switch-create-limit 10)
   (setq exwm-workspace-show-all-buffers t)
   (setq exwm-layout-show-all-buffers t)
+  (setq exwm-debug-on t)
   ;; From emacs wiki
   (defun toggle-transparency ()
     (interactive)
@@ -22,11 +23,11 @@
            '(85. 85) '(100 . 100)))))
   (global-set-key (kbd "C-c t t") 'toggle-transparency))
 
-;(use-package! exwm-mff
-;    :config
-;  (add-hook 'exwm-mode-hook 'exwm-mff-mode))
+(use-package! exwm-mff
+    :config
+  (add-hook 'exwm-mode-hook 'exwm-mff-mode))
 
-;;try
+;; Work well with jupyter notebook!
 (use-package exwm-edit
   :config
   (defun ag-exwm/on-exwm-edit-compose ()
@@ -58,15 +59,7 @@
         ([?\s-r] . exwm-reset)
         ;; Bind "s-w" to switch workspace interactively.
         ([?\s-w] . exwm-workspace-switch)
-        ;; Bind "s-0" to "s-9" to switch to a workspace by its index.
-        ,@(mapcar (lambda (i)
-                    `(,(kbd (format "s-%d" i)) .
-                      (lambda ()
-                        ((interactive))
-                        (exwm-workspace-switch-create ,i))))
-                  (number-sequence 0 9))
-        ;; Bind "s-&" to launch applications ('M-&' also works if the output
-        ;; buffer does not bother you).
+        ;; Bind "s-&" to launch applications ('M-&' also works if the output buffer does not bother you).
         ([?\s-&] . (lambda (command)
                      (interactive (list (read-shell-command "$ ")))
                      (start-process-shell-command command nil command)))
@@ -74,10 +67,6 @@
         ([s-f2] . (lambda ()
                     (interactive)
                     (start-process "" nil "/usr/bin/slock")))))
-
-;; More for line mode
-;(push ?\s-  exwm-input-prefix-keys)
-;(push ?\M-  exwm-input-prefix-keys)
 
 (display-time-mode 1)
 
@@ -96,9 +85,10 @@
 (defun zackteo/switch-to-last-buffer ()
   "Switch to last open buffer in current window."
   (interactive)
-  (switch-to-buffer (other-buffer (current-buffer) 1)))
+  (switch-to-buffer (other-buffer (current-buffer)  1)))
 
-;; Global keys also
+;; Global keys part II
+(setq exwm-input-prefix-keys '(?\C-x ?\C-u ?\C-h ?\M-x ?\M-` ?\M-& ?\M-: f3 f4))
 (exwm-input-set-key (kbd "s-<backspace>") #'zackteo/launch)
 ;(exwm-input-set-key (kbd "s-p") #'password-store-copy)
 ;(exwm-input-set-key (kbd "C-x t") #'vterm)
@@ -109,6 +99,7 @@
 (exwm-input-set-key (kbd "s-F") #'counsel-locate)
 (exwm-input-set-key (kbd "s-<tab>") #'zackteo/switch-to-last-buffer)
 (exwm-input-set-key (kbd "<pause>") #'zackteo/screen-to-clipboard)
+(exwm-input-set-key (kbd "s-<f12>") #'zackteo/screen-to-clipboard)
 (exwm-input-set-key (kbd "s-b") #'zackteo/exwm-ibuffer)
 
 ;; move focus directionally
@@ -131,13 +122,18 @@
 
 ;; workspace switching
 (exwm-input-set-key (kbd "s-w") #'exwm-workspace-swap)
-(exwm-input-set-key (kbd "s-0") (lambda() (interactive) (exwm-workspace-switch 0)))
-(exwm-input-set-key (kbd "s-1") (lambda() (interactive) (exwm-workspace-switch 1)))
-(exwm-input-set-key (kbd "s-2") (lambda() (interactive) (exwm-workspace-switch 2)))
-(exwm-input-set-key (kbd "s-3") (lambda() (interactive) (exwm-workspace-switch 3)))
-(exwm-input-set-key (kbd "s-4") (lambda() (interactive) (exwm-workspace-switch 4)))
-(exwm-input-set-key (kbd "s-5") (lambda() (interactive) (exwm-workspace-switch 5)))
-(exwm-input-set-key (kbd "s-6") (lambda() (interactive) (exwm-workspace-switch 6)))
+(exwm-input-set-key (kbd "s-1") (lambda() (interactive) (exwm-workspace-switch 0)))
+(exwm-input-set-key (kbd "s-2") (lambda() (interactive) (exwm-workspace-switch 1)))
+(exwm-input-set-key (kbd "s-3") (lambda() (interactive) (exwm-workspace-switch 2)))
+(exwm-input-set-key (kbd "s-4") (lambda() (interactive) (exwm-workspace-switch 3)))
+(exwm-input-set-key (kbd "s-5") (lambda() (interactive) (exwm-workspace-switch 4)))
+(exwm-input-set-key (kbd "s-6") (lambda() (interactive) (exwm-workspace-switch 5)))
+(exwm-input-set-key (kbd "s-7") (lambda() (interactive) (exwm-workspace-switch 6)))
+(exwm-input-set-key (kbd "s-8") (lambda() (interactive) (exwm-workspace-switch 7)))
+(exwm-input-set-key (kbd "s-9") (lambda() (interactive) (exwm-workspace-switch 8)))
+(exwm-input-set-key (kbd "s-0") (lambda() (interactive) (exwm-workspace-switch 9)))
+;; For org-noter creating another frame
+(exwm-input-set-key (kbd "s--") (lambda() (interactive) (exwm-workspace-switch 10)))
 
 ;; Switching workspaces
 (defun exwm-workspace-switch-previous (p)
@@ -224,8 +220,8 @@ no window below and `exwm-windmove-workspace-1-below-p' is non-NIL."
               (exwm-input-set-local-simulation-keys '(([?\C-c ?\C-c] . ?\C-c))))))
 
 (setq exwm-input-simulation-keys
-      '(
-        ;; movement
+      '(([C-u] . [C-u])       ; multiplier, doesn't need to be here but reminder
+        ;; movement TODO add more more text like jump para
         ([?\C-b] . [left])
         ([?\M-b] . [C-left])
         ([?\C-f] . [right])
@@ -245,12 +241,12 @@ no window below and `exwm-windmove-workspace-1-below-p' is non-NIL."
         ([?\C-k] . [S-end C-x])
         ([?\C-w] . [?\C-x])
         ([?\M-w] . [?\C-c])
-        ([?\C-y] . [?\C-v])
-        ;([?\C-S-y] . [?\C-\S-v]) ; paste without formatting
-        ([?\s-a] . [?\C-a]) ; should it be s-h cause C-x h
+        ([?\C-y] . [?\C-v])             ; Add C-S-V ?
+        ([?\s-a] . [?\C-a])             ; should it be s-h cause C-x h
+        ([?\s-h] . [?\C-a])             ; just both lmao
         ;; undo/redo
         ([?\C-/] . [?\C-z])
-        ([?\C-?] . [?\C-y]) ; redo
+        ([?\C-?] . [?\C-y])             ; redo
         ;; search
         ([?\C-s] . [?\C-f])
         ;; selection-shift movements
@@ -260,68 +256,68 @@ no window below and `exwm-windmove-workspace-1-below-p' is non-NIL."
         ([?\C-\S-n] . [S-down])
         ([?\M-B] . [C-S-left])
         ([?\M-F] . [C-S-right])
-        ;; multiplier, doesn't need to be here but reminder
-        ([C-u] . [C-u])
-        ;; newline
+        ;; newline/esc
         ([\\S-\\r] . [end return])
-        ;;Navigation C-] is going to home ? Alt-Home?
-        ([?\M-\[] . [M-left]) ; back 
-        ([?\M-\]] . [M-right]); forward
-
-
-        ;; Open new window?
-        ;([?\M-P] . [C-S-p])
-        ;([?\M-N] . [C-S-n])
-
-        ;; firefox stuffs?
-        ;; Focus Tab Bar
-        ([?\s-z] . [?\C-l S-tab S-tab S-tab]) ;; sometime no back history button hmmm
         ([?\C-g] . [escape])
-
-        ;([S-tab] . [C-left C-S-right C-c])
-        ;; copy link
-        ;([?\C-l] . [?\C-l ?\C-c])
-        ;; questionable shifting line up/down
-        ;;([?\M-p] . [home S-end ?\C-c backspace delete up home return up ?\C-v])
-        ;;([?\M-n] . [home S-end ?\C-c backspace delete end return ?\C-v])
-
-        ([?\C-\s-p] . [C-p])
-        ([?\C-\s-n] . [C-n])
-        ([?\C-\S-w] . [?\C-w])
-        ([?\C-\s-k] . [C-k])
-        ([?\C-\'] . [\" home \" return]);; idk
-        ([?\C-\"] . [\" end \" return]) ;; quoting
-        ([?\C-\,] . [home S-end ?\C-c])
-        ([?\C-\s-b] . [?\C-b])
-        ([?\C-\s-s] . [?\C-s])
-        ([?\s-a] . [?\C-a])
-        ([?\C-\S-u] . [C-S-f])
-
+        ;;Navigation C-] is going to home ? Alt-Home?
+        ([?\M-\[] . [M-left])           ; back
+        ([?\M-\]] . [M-right])          ; forward
         ;; Toggle Developer Tools
         ([?\M-i] . [C-S-i])
         ([?\M-k] . [C-S-k]) ;; web console - can't toggle
         ;; C-S-M Responsive Design View
         ;; C-S-S Debugger
         ;; M-s Menu
-       ))
+
+        ;; firefox stuffs? F7 Caret mode!!
+        ;; Focus Tab Bar
+        ([?\s-z] . [?\C-l S-tab S-tab S-tab]) ;; sometime no back history button hmmm
+        ;; copy link
+        ([?\C-l] . [?\C-l ?\C-c])
+        ;; questionable shifting line up/down
+        ([?\M-p] . [home S-end ?\C-c backspace delete up home return up ?\C-v])
+        ([?\M-n] . [home S-end ?\C-c backspace delete end return ?\C-v])
+        ([?\C-\"] . [\" end \" return]) ;; quoting
+
+        ;; Ensure ways to still access old bindings
+        ([?\C-\s-b] . [?\C-b]) ;; bookmark
+        ([?\C-\s-s] . [?\C-s]) ;; save
+        ([?\C-\s-p] . [C-p])
+        ([?\C-\s-n] . [C-n])
+        ([?\C-\S-w] . [?\C-w]) ;; close
+        ([?\C-\s-k] . [C-k])
+        ([?\C-\s-b] . [?\C-b]) ;; bookmark
+        ([?\C-\s-s] . [?\C-s]) ;; save
+        ;; QuickFind next
+        ([?\C-,] . [C-g])
+        ([?\C-.] . [C-S-g])
+        ;;idk
+        ;; ([?\C-\S-u] . [C-S-f])
+        ;; Open new window?
+        ;; ([?\M-P] . [C-S-p])
+        ;; ([?\M-N] . [C-S-n])
+        ;; ([?\C-\'] . [\" home \" return])
+        ;; idk
+        ))
 
 (exwm-input-set-simulation-keys exwm-input-simulation-keys)
 
+;;(defun zackteo/opacity-100 ()
+;;  (interactive)
+;;  (shell-command "transset-df 1")
+;;  (message "Nay :("))
+;;(defun zackteo/opacity-085 ()
+;;  (interactive)
+;;  (shell-command "transset-df 0.85")
+;;  (message "Yay :D"))
+;;(exwm-input-set-key (kbd "s--") #'zackteo/opacity-100) ;;???
+;;(exwm-input-set-key (kbd "s-=") #'zackteo/opacity-085)
 
-;(defun zackteo/opacity-100 ()
-;  (interactive)
-;  (shell-command "transset-df 1")
-;  (message "Nay :("))
-;(defun zackteo/opacity-085 ()
-;  (interactive)
-;  (shell-command "transset-df 0.85")
-;  (message "Yay :D"))
-;(exwm-input-set-key (kbd "s--") #'zackteo/opacity-100) ;;???
-;(exwm-input-set-key (kbd "s-=") #'zackteo/opacity-085)
+;; (defun zackteo/launch-fn (command)
+;;   (lambda () (interactive) (start-process-shell-command command nil command)))
 
-;(defun zackteo/launch-fn (command)
-;  (start-process-shell-command command nil command))
-;(exwm-input-set-key (kbd "s-l u") (interactive) (zackteo/launch-fn "wine /home/zackteo/.wine/drive_c/Program\ Files\ \(x86\)/Universalis/Universalis.exe"))
+;; (exwm-input-set-key (kbd "s-l u")
+;;                     (start-process-shell-command "universalis" nil "wine C:\\windows\\command\\start.exe /Unix /home/zackteo/.wine/dosdevices/c:/users/zackteo/Start\ Menu/Programs/Universalis.lnk"))
 
 (define-ibuffer-column exwm-class (:name "Class")
   (if (bound-and-true-p exwm-class-name)
@@ -353,17 +349,10 @@ no window below and `exwm-windmove-workspace-1-below-p' is non-NIL."
     (ignore-errors (ibuffer-jump-to-buffer name))))
 
 
-;; already implemented
-;(define-key exwm-mode-map (kbd "C-x 4 0")
-;  (lambda ()
-;    (interactive)
-;    (kill-buffer)
-;    (delete-window)))
-
-
 (require 'exwm-randr)
 
-(defvar exwm-connected-displays 1
+;; Keep at 2 even with just laptop
+(defvar exwm-connected-displays 2
   "Number of connected displays.")
 
 ;; Update exwm-randr-workspace-output-plist with 2 or 3 outputs named
@@ -378,23 +367,23 @@ no window below and `exwm-windmove-workspace-1-below-p' is non-NIL."
          (primary (car connected))  ; Primary display is always first in list
          (other-1 (cadr connected))
          (other-2 (caddr connected)))
-    (setq exwm-connected-displays (length connected))
+    ;; (setq exwm-connected-displays (length connected))
     (setq exwm-randr-workspace-monitor-plist
-          ;(append (list 0 other-1)
-          ;        (list 1 (or other-2 other-1 primary))
-          ;        (mapcan (lambda (i) (list i (or primary other-1 other-2)))
-          ;                (number-sequence 2 exwm-workspace-number))))
-          (append (list 0 (or other-1 primary))
+          ;;(append (list 0 other-1)
+          ;;        (list 1 (or other-2 other-1 primary))
+          ;;        (mapcan (lambda (i) (list i (or primary other-1 other-2)))
+          ;;                (number-sequence 2 exwm-workspace-number))))
+          (append ;; (list 0 (or other-1 primary))
                   (mapcan (lambda (i) (list i (or other-2 other-1 primary)))
-                          (number-sequence 1 (/ exwm-workspace-number 2)))
+                          (number-sequence 0 (- (/ exwm-workspace-number 2) 1)))
                   (mapcan (lambda (i) (list i (or primary other-1 other-2)))
-                          (number-sequence (+ 1 (/ exwm-workspace-number 2)) exwm-workspace-number))))
+                          (number-sequence (/ exwm-workspace-number 2) exwm-workspace-number))))
     (exwm-randr-refresh)
     (message "Randr: %s monitors refreshed." (string-join connected ", "))))
 
 (add-hook 'exwm-randr-screen-change-hook #'dakra-exwm-randr-screen-change)
 
-; Non automated
+; Non automated way
 ;(setq exwm-randr-workspace-output-plist '(1 "HDMI-1" 2 "eDP-1" 3 "HDMI-1" 4 "eDP-1" 5 "HDMI-1" 6 "eDP-1" 0 "HDMI-1"))
 ;(add-hook 'exwm-randr-screen-change-hook
 ;          (lambda ()
@@ -408,4 +397,7 @@ no window below and `exwm-windmove-workspace-1-below-p' is non-NIL."
 ;(require 'exwm-systemtray)
 ;(exwm-systemtray-enable)
 
-(shell-command "picom &")
+
+;; Realise that transparency doesn't do much LOL
+;; (shell-command "picom &")
+                                        ; Window management
