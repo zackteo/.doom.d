@@ -49,7 +49,7 @@
       )
 
 ;; No persistent undo history
-;(remove-hook 'undo-fu-mode-hook #'global-undo-fu-session-mode)
+;; (remove-hook 'undo-fu-mode-hook #'global-undo-fu-session-mode)
 
 (use-package! windmove
   :config
@@ -311,13 +311,11 @@ Saves to a temp file and puts the filename in the kill ring."
 (use-package! mathpix.el
   :commands (mathpix-screenshot)
   :init
-  (map! "C-x m" #'mathpix-screenshot)
   (setq mathpix-screenshot-method (cond ((executable-find "maim")  "maim -u -s %s")
                                         ((executable-find "scrot") "scrot -s %s"))
         mathpix-app-id ""
-        mathpix-app-key ""))
-
-
+        mathpix-app-key "")
+  (map! "C-x m" #'mathpix-screenshot))
 
 ;; active Babel languages
 (org-babel-do-load-languages
@@ -331,6 +329,16 @@ Saves to a temp file and puts the filename in the kill ring."
 (setq org-babel-clojure-backend 'cider)
 (require 'cider)
 
+(after! format
+  (set-formatter! 'clang-format
+    '("clang-format"
+      "-style={BasedOnStyle: Google, IndentWidth: 4, SortIncludes: false}"
+      ("-assume-filename=%S" (or buffer-file-name mode-result "")))))
+
+(setq-hook! 'c++-mode-hook +format-with 'clang-format)
+
+;; (setq +format-on-save-enabled-modes
+;;       '(not c++-mode))
 
 ;; (require 'lsp-java-boot)
 ;; to enable the lenses
@@ -343,3 +351,35 @@ Saves to a temp file and puts the filename in the kill ring."
   :init
   ;; (setq telega-chat-show-deleted-messages-for nil)
   )
+
+;; For more intense debugging
+
+;; (defun doom--backtrace ()
+;;   (let* ((n 0)
+;;          (frame (backtrace-frame n))
+;;          (frame-list nil)
+;;          (in-program-stack nil))
+;;     (while frame
+;;       (when in-program-stack
+;;         (push (cdr frame) frame-list))
+;;       (when (eq (elt frame 1) 'doom-debugger)
+;;         (setq in-program-stack t))
+;;       (setq n (1+ n)
+;;             frame (backtrace-frame n)))
+;;     (reverse frame-list)))
+
+;; (defun doom-debugger (error data)
+;;   "A custom debugger for `debugger'.
+;; Writes the backtrace to another buffer, in case it is lost for whatever reason."
+;;   (with-current-buffer (get-buffer-create "*rescued-backtrace*")
+;;     (let ((standard-output (current-buffer)))
+;;       (prin1 error)
+;;       (prin1 data)
+;;       (mapc #'print (doom--backtrace)))
+;;     (kill-new (buffer-string))
+;;     (message "Backtrace copied to your clipboard"))
+;;   (debug error data))
+
+;; (setq debugger #'doom-debugger)
+
+;; (toggle-debug-on-error)

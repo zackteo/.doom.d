@@ -54,7 +54,7 @@
 (package! exwm)
 (package! buffer-move)
 (package! exwm-edit)
-(package! exwm-mff :recipe (:host github :repo "ieure/exwm-mff" :branch "master"))
+(package! exwm-mff :recipe (:host github :repo "ieure/exwm-mff" :branch "main"))
 (package! exwm-firefox-core :recipe (:host github :repo "walseb/exwm-firefox-core" :branch "master"))
 
 (package! emms)
@@ -80,8 +80,6 @@
   :recipe (:host github :repo "jethrokuan/mathpix.el"))
 
 (package! nov)
-(package! ftable :recipe (:host github :repo "casouri/ftable" :branch "master"))
-(package! valign :recipe (:host github :repo "casouri/valign" :branch "master"))
 (package! dired-narrow)
 
 (package! lsp-treemacs)
@@ -93,3 +91,6 @@
 (package! telega)
 
 (package! multi-vterm)
+
+;; (package! ftable :recipe (:host github :repo "casouri/ftable" :branch "master"))
+;; (package! valign :recipe (:host github :repo "casouri/valign" :branch "master"))

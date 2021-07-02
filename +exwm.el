@@ -59,14 +59,26 @@
         ([?\s-r] . exwm-reset)
         ;; Bind "s-w" to switch workspace interactively.
         ([?\s-w] . exwm-workspace-switch)
+        ;; Bind "s-o" to toggle char mode for emacs-in-emacs
+        ([?\s-o] . exwm-input-toggle-keyboard)
         ;; Bind "s-&" to launch applications ('M-&' also works if the output buffer does not bother you).
         ([?\s-&] . (lambda (command)
                      (interactive (list (read-shell-command "$ ")))
                      (start-process-shell-command command nil command)))
+        ;; go to scratch
+        ([s-escape] . (lambda ()
+                        (interactive)
+                        (switch-to-buffer "*scratch*")))
         ;; Bind "s-<f2>" to "slock", a simple X display locker.
         ([s-f2] . (lambda ()
                     (interactive)
-                    (start-process "" nil "/usr/bin/slock")))))
+                    (start-process "" nil "/usr/bin/slock")))
+        ;; simple text to speech. Need to copy clipboard
+        ([?\s-e] . (lambda ()
+                     (interactive)
+                     (start-process-shell-command "" nil "xclip -o -sel clip | espeak-ng")))
+
+        ))
 
 (display-time-mode 1)
 
@@ -81,6 +93,10 @@
            " && xclip $FILENAME -selection clipboard "
            "-t image/png &> /dev/null && rm $FILENAME'"))
   (message "Added to clipboard."))
+
+(defun zackteo/flameshot ()
+  (interactive)
+  (shell-command "flameshot gui"))
 
 (defun zackteo/switch-to-last-buffer ()
   "Switch to last open buffer in current window."
@@ -98,8 +114,9 @@
 (exwm-input-set-key (kbd "s-f") #'counsel-find-file)
 (exwm-input-set-key (kbd "s-F") #'counsel-locate)
 (exwm-input-set-key (kbd "s-<tab>") #'zackteo/switch-to-last-buffer)
-(exwm-input-set-key (kbd "<pause>") #'zackteo/screen-to-clipboard)
-(exwm-input-set-key (kbd "s-<f12>") #'zackteo/screen-to-clipboard)
+(exwm-input-set-key (kbd "<pause>") #'zackteo/flameshot)
+(exwm-input-set-key (kbd "s-<f12>") #'zackteo/flameshot)
+(exwm-input-set-key (kbd "s-<pause>") #'zackteo/screen-to-clipboard)
 (exwm-input-set-key (kbd "s-b") #'zackteo/exwm-ibuffer)
 
 ;; move focus directionally
