@@ -319,16 +319,16 @@ no window below and `exwm-windmove-workspace-1-below-p' is non-NIL."
 
 (exwm-input-set-simulation-keys exwm-input-simulation-keys)
 
-;;(defun zackteo/opacity-100 ()
-;;  (interactive)
-;;  (shell-command "transset-df 1")
-;;  (message "Nay :("))
-;;(defun zackteo/opacity-085 ()
-;;  (interactive)
-;;  (shell-command "transset-df 0.85")
-;;  (message "Yay :D"))
-;;(exwm-input-set-key (kbd "s--") #'zackteo/opacity-100) ;;???
-;;(exwm-input-set-key (kbd "s-=") #'zackteo/opacity-085)
+(defun zackteo/opacity-100 ()
+ (interactive)
+ (shell-command "transset-df 1")
+ (message "Nay :("))
+(defun zackteo/opacity-085 ()
+ (interactive)
+ (shell-command "transset-df 0.85")
+ (message "Yay :D"))
+(exwm-input-set-key (kbd "s--") #'zackteo/opacity-100) ;;???
+(exwm-input-set-key (kbd "s-=") #'zackteo/opacity-085)
 
 ;; (defun zackteo/launch-fn (command)
 ;;   (lambda () (interactive) (start-process-shell-command command nil command)))
@@ -381,9 +381,17 @@ no window below and `exwm-windmove-workspace-1-below-p' is non-NIL."
 (defun dakra-exwm-randr-screen-change ()
   (let* ((connected-cmd "xrandr -q|awk '/ connected/ {print $1}'")
          (connected (process-lines "bash" "-lc" connected-cmd))
-         (primary (car connected))  ; Primary display is always first in list
-         (other-1 (cadr connected))
-         (other-2 (caddr connected)))
+
+         ;; Primary display is always first in list
+         ;; (primary (car connected))
+         ;; (other-1 (cadr connected))
+         ;; (other-2 (caddr connected))
+
+         ;; Isit really?
+         (other-1 (car connected))
+         (primary (cadr connected))
+         (other-2 (caddr connected))
+         )
     ;; (setq exwm-connected-displays (length connected))
     (setq exwm-randr-workspace-monitor-plist
           ;;(append (list 0 other-1)
@@ -416,5 +424,5 @@ no window below and `exwm-windmove-workspace-1-below-p' is non-NIL."
 
 
 ;; Realise that transparency doesn't do much LOL
-;; (shell-command "picom &")
-                                        ; Window management
+(shell-command "picom &")
+;; uninstall transset-df too

@@ -120,7 +120,7 @@
 (use-package! clojure-essential-ref-nov
   :after cider
   :init
-  (setq clojure-essential-ref-nov-epub-path "~/Dropbox/Books/Clojure_The_Essential_Reference_v29_MEAP.epub")
+  (setq clojure-essential-ref-nov-epub-path "~/Dropbox/Books/Clojure/Clojure_The_Essential_Reference_v29_MEAP.epub")
   :bind (
          :map cider-mode-map
          ("C-c C-d C-r" . clojure-essential-ref)
@@ -210,9 +210,11 @@
   ;; (emms-playing-time-disable-display)
   (setq emms-source-file-default-directory "~/Music/")
 
+  ;; Added /usr/local/bin/emms-info-libtag
   (require 'emms-info-libtag)
   (require 'emms-volume)
   (setq emms-info-functions '(emms-info-libtag))
+  ;; might not be working, had to copy to get working
   (setq emms-browser-covers 'emms-browser-cache-thumbnail-async)
 
   (defun my-emms-play-url-at-point ()
@@ -321,7 +323,10 @@ Saves to a temp file and puts the filename in the kill ring."
 (org-babel-do-load-languages
  'org-babel-load-languages
  '((clojure . t)
+   (shell . t)
    (emacs-lisp . t)))
+
+(setq org-confirm-babel-evaluate nil)
 
 (require 'org)
 (require 'ob-clojure)
@@ -345,12 +350,29 @@ Saves to a temp file and puts the filename in the kill ring."
 ;; (add-hook 'lsp-mode-hook #'lsp-lens-mode)
 ;; (add-hook 'java-mode-hook #'lsp-java-boot-lens-mode)
 
+
+;; (use-package! lsp-mode
+;;   :hook ((clojure-mode . lsp)
+;;          (clojurec-mode . lsp)
+;;          (clojurescript-mode . lsp))
+;;   :config
+;;   ;; add paths to your local installation of project mgmt tools, like lein
+;;   ;; (setenv "PATH" (concat
+;;   ;;                  "/usr/local/bin" path-separator
+;;   ;;                  (getenv "PATH")))
+;;   (dolist (m '(clojure-mode
+;;                clojurec-mode
+;;                clojurescript-mode
+;;                clojurex-mode))
+;;     (add-to-list 'lsp-language-id-configuration `(,m . "clojure"))))
+
+
 ;; telega
 (set-fontset-font t 'unicode "Symbola" nil 'append)
-(use-package! telega
-  :init
-  ;; (setq telega-chat-show-deleted-messages-for nil)
-  )
+;; (use-package! telega
+;;   :init
+;;   ;; (setq telega-chat-show-deleted-messages-for nil)
+;;   )
 
 ;; For more intense debugging
 

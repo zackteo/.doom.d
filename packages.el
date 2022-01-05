@@ -49,7 +49,6 @@
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;(unpin! t)
 
-
 (package! xelb)
 (package! exwm)
 (package! buffer-move)
@@ -66,8 +65,9 @@
 (package! clojure-essential-ref-nov)
 
 (package! epresent)
+
 ;; (unpin! org-roam)
-;; (package! org-roam :recipe (:host github :repo "zackteo/org-roam" :branch "master"))
+;; (package! org-roam :recipe (:host github :repo "org-roam/org-roam" :branch "master"))
 
 (package! kibit-helper)                 ; Clojure suggestions with logic
 
@@ -86,11 +86,20 @@
 
 (package! aggressive-indent)
 
-(package! 4clojure)
+;; (package! 4clojure)
 
-(package! telega)
+(package! hiccup-cli)
+
+(package! telega
+  :recipe (:host github :repo "zevlg/telega.el"))
 
 (package! multi-vterm)
 
+(package! vulpea :recipe (:host github :repo "d12frosted/vulpea" :branch "master"))
+
 ;; (package! ftable :recipe (:host github :repo "casouri/ftable" :branch "master"))
 ;; (package! valign :recipe (:host github :repo "casouri/valign" :branch "master"))
+
+
+;; CIDER temp fix
+(package! map :pin "bb50dba")

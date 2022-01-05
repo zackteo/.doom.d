@@ -17,9 +17,8 @@
 ;; + `doom-big-font' -- used for `doom-big-font-mode'; use this for
 ;;   presentations or streaming.
 ;;
-;;
 ;; They all accept either a font-spec, font string ("Input Mono-12"), or xlfd
-;; font string. You generally only nede these two:
+;; font string. You generally only need these two:
 ;; (setq doom-font (font-spec :family "monospace" :size 12 :weight 'semi-light)
 ;;       doom-variable-pitch-font (font-spec :family "sans" :size 13))
 
@@ -27,8 +26,7 @@
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
 (setq doom-theme 'doom-material)
-
-;(setq doom-theme 'doom-one)
+;;(setq doom-theme 'doom-one)
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
@@ -37,6 +35,7 @@
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type t)
+
 
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
@@ -49,10 +48,10 @@
 ;; - `map!' for binding new keys
 ;;
 ;; To get information about any of these functions/macros, move the cursor over
-;; the highlighted symbol at press 'K' (non-evil users must press 'C-c g k').
+;; the highlighted symbol at press 'K' (non-evil users must press 'C-c c k').
 ;; This will open documentation for it, including demos of how they are used.
 ;;
-;; You can also try 'gd' (or 'C-c g d') to jump to their definition and see how
+;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
 
 ;; PERSONAL CONFIG
@@ -68,21 +67,5 @@
 (load! "justify-kp")
 
 
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(ispell-dictionary "en_GB")
- '(ispell-program-name "hunspell")
- '(org-agenda-files
-   '("/home/zackteo/Dropbox/org/birthday.org" "/home/zackteo/Dropbox/org/birthday_new.org" "/home/zackteo/Dropbox/org/newgtd.org" "/home/zackteo/Dropbox/org/weeklyreview.org"))
- '(org-roam-directory "~/Dropbox/org/roam/")
- '(org-roam-index-file "index.org")
- '(package-selected-packages '(org-roam-server)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+(load! "cmake-mode")
+;; (load! "ob-babashka")
